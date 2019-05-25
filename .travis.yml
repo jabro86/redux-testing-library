@@ -3,12 +3,12 @@ cache:
   directories:
     - ~/.yarn
 notifications:
-  email: false
+  email: true
 node_js:
-  - '10'
-  - '11'
-  - '8'
-  - '6'
+  - "10"
+  - "11"
+  - "12"
+  - "8"
 script:
   - yarn test:prod && yarn build
 after_success:
