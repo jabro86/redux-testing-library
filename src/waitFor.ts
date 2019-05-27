@@ -7,45 +7,39 @@ interface Options {
 }
 
 export type WaitFor = (
-  callback: (state: any) => { result: boolean; error: Error } | boolean,
+  assertionCallback: (state: any) => void,
   options?: Options
 ) => Promise<boolean | undefined>;
 
 export default function waitFor(store: Store<object, AnyAction>): WaitFor {
-  return (callback, options = {}) =>
+  return (assertionCallback, options = {}) =>
     new Promise((resolve, reject) => {
       let lastError: Error;
       const { timeout = 4500 } = options;
       const timer = setTimeout(onTimeout, timeout);
       const unsubscribe = observeStore({ store, onChange });
 
-      function onDone({ error, result }: { error?: Error; result?: boolean }) {
+      function onDone({ error, result }: { error?: Error; result?: boolean }): void {
         clearTimeout(timer);
         setImmediate(() => {
           unsubscribe();
         });
-        if (error) {
-          reject(error);
-        } else {
+        if (result) {
           resolve(result);
+        } else {
+          reject(error);
         }
       }
 
-      function onChange(currentState: object) {
+      function onChange(currentState: object): void {
         try {
-          const response = callback(currentState);
-          const { result, error } =
-            typeof response === "boolean" ? { result: response, error: undefined } : response;
-          if (result) {
-            onDone({ result });
-          } else if (error) {
-            lastError = error;
-          }
-        } catch (err) {
-          lastError = err;
+          assertionCallback(currentState);
+          onDone({ result: true });
+        } catch (error) {
+          lastError = error;
         }
       }
-      function onTimeout() {
+      function onTimeout(): void {
         onDone({ error: lastError || new Error("Timed out in waitForElement.") });
       }
       onChange(store.getState());

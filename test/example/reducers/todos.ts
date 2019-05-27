@@ -1,8 +1,12 @@
 import { AnyAction } from "redux";
 
-import { TodoItem } from "../components/TodoList";
+export interface TodoItem {
+  id: number;
+  text: string;
+  completed: boolean;
+}
 
-const todos = (state: TodoItem[] = [], action: AnyAction) => {
+const todos = (state: TodoItem[] = [], action: AnyAction): TodoItem[] => {
   switch (action.type) {
     case "ADD_TODO":
       return [

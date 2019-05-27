@@ -1,12 +1,7 @@
 import * as React from "react";
 
+import { TodoItem } from "../reducers";
 import Todo from "./Todo";
-
-export interface TodoItem {
-  id: number;
-  completed: boolean;
-  text: string;
-}
 
 export interface StateProps {
   todos: TodoItem[];

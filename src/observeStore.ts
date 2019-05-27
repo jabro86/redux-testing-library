@@ -1,16 +1,15 @@
 import { Store, Unsubscribe } from "redux";
 
 export interface Options {
-  store: Store;
-  select?(state: object): any;
+  readonly store: Store;
   onChange(currentState: object): void;
 }
 
-export default function observeStore({ store, onChange, select }: Options): Unsubscribe {
+export default function observeStore({ store, onChange }: Options): Unsubscribe {
   let currentState: object;
 
-  function handleChange() {
-    const nextState = select ? select(store.getState()) : store.getState();
+  function handleChange(): void {
+    const nextState = store.getState();
     if (nextState !== currentState) {
       currentState = nextState;
       onChange(currentState);

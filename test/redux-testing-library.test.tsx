@@ -1,22 +1,23 @@
 import * as React from "react";
 
 import { render } from "../src/redux-testing-library";
-import { TodoApp, store } from "./example";
-import { addTodo } from "./example/actions";
+import { TodoApp, store, TodoActions, TodoSelectors } from "./example";
 
-describe("example: todo-list", () => {
-  describe("when addTodo action is dispatched", () => {
-    it("adds one todo item to the store", async () => {
+describe("todo app", () => {
+  describe("when addTodo action is dispatched with a given text as payload", () => {
+    it("adds a todo item with the given text to the store", async () => {
       const {
-        reduxStore: { getState, dispatch },
+        store: { dispatch },
         waitForStoreChange
       } = render(<TodoApp />, store);
 
-      dispatch(addTodo("Go to bed!"));
+      dispatch(TodoActions.addTodo("Do homework!"));
 
-      await waitForStoreChange(state => state.todos.length === 1);
-
-      expect(getState().todos).toStrictEqual([{ id: 0, completed: false, text: "Go to bed!" }]);
+      await waitForStoreChange(state => {
+        expect(TodoSelectors.getTodos(state)).toStrictEqual([
+          { id: 0, completed: false, text: "Do homework!" }
+        ]);
+      });
     });
   });
 });

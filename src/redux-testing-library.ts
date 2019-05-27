@@ -9,7 +9,7 @@ function customRender(ui: React.ReactElement<any>, store: Store, options?: Rende
   const result = render(ui, options);
   return {
     ...result,
-    reduxStore: store,
+    store,
     waitForStoreChange: waitForStoreChange(store)
   };
 }
