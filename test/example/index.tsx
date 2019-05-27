@@ -7,11 +7,13 @@ import rootReducer from "./reducers";
 import * as TodoActions from "./actions";
 import * as TodoSelectors from "./selectors";
 
-export const store = createStore(rootReducer);
-export const TodoApp: React.ComponentType = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
+export const TodoApp = {
+  store: createStore(rootReducer),
+  UI: () => (
+    <Provider store={TodoApp.store}>
+      <App />
+    </Provider>
+  )
+};
 
 export { TodoActions, TodoSelectors };
